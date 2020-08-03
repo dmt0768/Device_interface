@@ -1,0 +1,90 @@
+
+<html>
+    <head>
+        <title>Панель управления</title>
+        <style>
+            body{
+                background: linear-gradient(#e66465, #9198e5);
+                }
+
+            h1 {
+            font: italic 2.8em "Fira Sans", serif;
+                }
+
+            body {
+                padding-left: 30px;
+                padding-right: 30px;
+            }
+            button {
+            box-shadow:inset 0px 1px 3px 0px #91b8b3;
+            background:linear-gradient(to bottom, #dbe1ff 5%, #00289e 100%);
+            background-color:#dbe1ff;
+            border-radius:8px;
+            border:1px solid #111682;
+            display:inline-block;
+            cursor:pointer;
+            color:#ffffff;
+            font-family:Arial;
+            font-size:15px;
+            font-weight:bold;
+            padding:11px 23px;
+            text-decoration:none;
+            text-shadow:0px 5px 6px #040f0d;
+        }
+
+        button:active {
+            position:relative;
+            top:5px;
+        }
+        input[type=text] {
+          border: 2px solid black;
+          border-radius: 6px;
+          background-color:	#E8F5FF;
+        }
+
+         </style>
+    </head>
+    <body>
+        <h1 style="text-align: center;">Панель управления синтезатором</h1>
+        <p><p><hr>
+
+            {% for line in Lines %}
+
+            <div>
+                <p>Канал {{line.id}}</p>
+
+
+
+                <form method="get" action="/edit_page/" style="display:inline">
+                    <p>Порт <input type="text" name="number" value="{{line.number}}"> &nbsp; &nbsp; &nbsp;
+                    Частота, Гц: <input type="text" name="freq" value="{{line.freq}}"> &nbsp; &nbsp; &nbsp;
+                    Статус: <input type="text" readonly name="status" value="{{line.status}}"> </p>
+                    <button name="edit" value="{{line.id}}" type="submit">Отправить</button>
+                </form>
+
+                 <form method="get" action="/stop_page/" style="display:inline">
+                    <button name="stop" type="submit" value="{{line.id}}">Остановить</button>
+                </form>
+
+
+                <form method="get" action="/delete_page/" style="display:inline">
+                    <button name="delete" type="submit" value="{{line.id}}">Удалить</button>
+                </form>
+
+
+                <hr><p></p>
+
+            </div>
+            {%endfor%}
+
+            <br>
+
+            <form method="get" action="/create_page">
+                <button type="submit">Создать</button>
+            </form>
+            <form method="get" action="">
+                <button type="submit">Обновить</button>
+            </form>
+
+    </body>
+</html>
