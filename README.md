@@ -27,7 +27,7 @@ pip install django==3.0.8
 4) Clone the repository
 
 ```
-  git clone https://github.com/dmt0768/Server.git
+git clone https://github.com/dmt0768/Server.git
 ```
 
 5) Run localserver
