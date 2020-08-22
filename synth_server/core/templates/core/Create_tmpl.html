@@ -1,0 +1,19 @@
+            {% for line in Lines %}
+
+                <p>Канал {{line.id}}</p>
+
+                <form id="form{{line.id}}" autocomplete="off" style="display:inline">
+                    <p>Порт <input id="port" type="text" name="number" onclick="this.value=''" placeholder="{{line.number}}" value="{{line.number}}"> &nbsp; &nbsp; &nbsp;
+                    Частота, Гц: <input id="freq" type="text" name="freq" onclick="this.value=''" placeholder="{{line.freq}}" value="{{line.freq}}"> &nbsp; &nbsp; &nbsp;
+                    Статус: <input type="text" readonly name="status" value="{{line.status}}"> </p>
+                    <button id="button" type="button" name="edit" value="{{line.id}}" onclick="edit_page('form{{line.id}}')">Отправить</button>
+                </form>
+
+                <button name="stop" type="button" onclick="stop_page(this.value, this.name)" value="{{line.id}}" style="display:inline">Остановить</button>
+
+                <button name="delete" type="button" onclick="delete_page(this.value, this.name)" value="{{line.id}}" style="display:inline">Удалить</button>
+
+
+                <hr><p></p>
+
+            {%endfor%}

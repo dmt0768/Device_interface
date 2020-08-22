@@ -1,0 +1,125 @@
+
+<html>
+    <head>
+        <title>Панель управления</title>
+        <style>
+
+            body {
+                background: linear-gradient(#e66465, #9198e5);
+                padding-left: 30px;
+                padding-right: 30px;
+                 }
+
+            h1 {
+            font: italic 2.8em "Fira Sans", serif;
+               }
+
+            button {
+            box-shadow:inset 0px 1px 3px 0px #91b8b3;
+            background:linear-gradient(to bottom, #dbe1ff 5%, #00289e 100%);
+            background-color:#dbe1ff;
+            border-radius:8px;
+            border:1px solid #111682;
+            display:inline-block;
+            cursor:pointer;
+            color:#ffffff;
+            font-family:Arial;
+            font-size:15px;
+            font-weight:bold;
+            padding:11px 23px;
+            text-decoration:none;
+            text-shadow:0px 5px 6px #040f0d;
+        }
+
+        button:active {
+            position:relative;
+            top:5px;
+        }
+
+        input[type=text] {
+          border: 2px solid black;
+          border-radius: 6px;
+          background-color:	#E8F5FF;
+        }
+
+        textarea {
+          width: 100%;
+          height: 150px;
+          padding: 12px 20px;
+          box-sizing: border-box;
+          border: 2px solid #ccc;
+          border-radius: 4px;
+          background-color: #f8f8f8;
+          font-size: 16px;
+          resize: none;
+        }
+
+        p {
+            font-family:verdana;
+            }
+         </style>
+    </head>
+    <body>
+        <h1 id="test" style="text-align: center;">Панель управления синтезатором</h1>
+        <p><p><hr>
+
+            <div >
+            {% for line in Lines %}
+
+
+                <p>Канал {{line.id}}</p>
+
+                <form method="get" action="/edit_page/" style="display:inline">
+                    <p>Порт <input type="text" name="number" value="{{line.number}}"> &nbsp; &nbsp; &nbsp;
+                    Частота, Гц: <input type="text" name="freq" value="{{line.freq}}"> &nbsp; &nbsp; &nbsp;
+                    Статус: <input type="text" readonly name="status" value="{{line.status}}"> </p>
+                    <button name="edit" value="{{line.id}}" type="submit">Отправить</button>
+                </form>
+
+                 <form method="get" action="/stop_page/" style="display:inline">
+                    <button name="stop" type="submit" value="{{line.id}}">Остановить</button>
+                </form>
+
+
+                <form method="get" action="/delete_page/" style="display:inline">
+                    <button name="delete" type="submit" value="{{line.id}}">Удалить</button>
+                </form>
+
+                <hr><p></p>
+
+
+            {%endfor%}
+            </div>
+            <br>
+
+            <form method="get" action="/create_page">
+                <button type="submit">Создать</button>
+            </form>
+            <form method="get" action="">
+                <button type="submit">Обновить</button>
+            </form>
+
+            <hr><p></p>
+
+            <form>
+              <p >Данные частотомера:</p>
+              <textarea id="frequency" readonly>Загрузка...</textarea>
+            </form>
+
+    </body>
+
+    <script>
+        var myVar = setInterval(myTimer, 500);
+
+        function myTimer() {
+        var xhr = new XMLHttpRequest()
+        xhr.onload = function() {
+            var serverResponse = document.getElementById("frequency")
+            serverResponse.innerHTML = this.responseText
+            }
+        xhr.open("GET", "test", true)
+        xhr.send()}
+   </script>
+
+
+</html>

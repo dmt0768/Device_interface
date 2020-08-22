@@ -3,18 +3,17 @@
     <head>
         <title>Панель управления</title>
         <style>
-            body{
+
+            body {
                 background: linear-gradient(#e66465, #9198e5);
-                }
+                padding-left: 30px;
+                padding-right: 30px;
+                 }
 
             h1 {
             font: italic 2.8em "Fira Sans", serif;
-                }
+               }
 
-            body {
-                padding-left: 30px;
-                padding-right: 30px;
-            }
             button {
             box-shadow:inset 0px 1px 3px 0px #91b8b3;
             background:linear-gradient(to bottom, #dbe1ff 5%, #00289e 100%);
@@ -36,55 +35,180 @@
             position:relative;
             top:5px;
         }
+
         input[type=text] {
           border: 2px solid black;
           border-radius: 6px;
           background-color:	#E8F5FF;
         }
 
+        textarea {
+          width: 100%;
+          height: 150px;
+          padding: 12px 20px;
+          box-sizing: border-box;
+          border: 2px solid #ccc;
+          border-radius: 4px;
+          background-color: #f8f8f8;
+          font-size: 16px;
+          resize: none;
+        }
+
+        p {
+            font-family:verdana;
+            }
+
+         input::placeholder {
+          color: #666666;
+          font-size: 1.1em;
+          font-style: italic;
+        }
+        input[type=text] {
+
+        }
          </style>
     </head>
     <body>
         <h1 style="text-align: center;">Панель управления синтезатором</h1>
         <p><p><hr>
 
+            <div id="cnt">
             {% for line in Lines %}
 
-            <div>
                 <p>Канал {{line.id}}</p>
 
-
-
-                <form method="get" action="/edit_page/" style="display:inline">
-                    <p>Порт <input type="text" name="number" value="{{line.number}}"> &nbsp; &nbsp; &nbsp;
-                    Частота, Гц: <input type="text" name="freq" value="{{line.freq}}"> &nbsp; &nbsp; &nbsp;
+                <form id="form{{line.id}}" autocomplete="off" style="display:inline">
+                    <p>Порт <input id="port" type="text" name="number" onclick="this.value=''" placeholder="{{line.number}}" value="{{line.number}}"> &nbsp; &nbsp; &nbsp;
+                    Частота, Гц: <input id="freq" type="text" name="freq" onclick="this.value=''" placeholder="{{line.freq}}" value="{{line.freq}}"> &nbsp; &nbsp; &nbsp;
                     Статус: <input type="text" readonly name="status" value="{{line.status}}"> </p>
-                    <button name="edit" value="{{line.id}}" type="submit">Отправить</button>
+                    <button id="button" type="button" name="edit" value="{{line.id}}" onclick="edit_page('form{{line.id}}')">Отправить</button>
                 </form>
 
-                 <form method="get" action="/stop_page/" style="display:inline">
-                    <button name="stop" type="submit" value="{{line.id}}">Остановить</button>
-                </form>
+                <button name="stop" type="button" onclick="stop_page(this.value, this.name)" value="{{line.id}}" style="display:inline">Остановить</button>
 
-
-                <form method="get" action="/delete_page/" style="display:inline">
-                    <button name="delete" type="submit" value="{{line.id}}">Удалить</button>
-                </form>
+                <button name="delete" type="button" onclick="delete_page(this.value, this.name)" value="{{line.id}}" style="display:inline">Удалить</button>
 
 
                 <hr><p></p>
 
-            </div>
             {%endfor%}
+
+                <script>
+                    function edit_page(id) {
+                        var edit = document.getElementById(id).button.value;  // Порт с каким id редактируем?
+                        var number = document.getElementById(id).port.value;  // Новый номер порта
+                        var freq = document.getElementById(id).freq.value;  // Новая частота
+
+                        //window.alert(edit);
+                        //window.alert(number);
+                        //window.alert(freq);
+
+                        var xhr = new XMLHttpRequest();
+                        var url = new URL('qq://edit_page/');
+                        url.searchParams.set('edit', edit);
+                        url.searchParams.set('number', number);
+                        url.searchParams.set('freq', freq);
+
+                        xhr.onload = function() {
+                        var serverResponse = document.getElementById("cnt")
+                        serverResponse.innerHTML = this.responseText
+                        }
+
+                        //window.alert(url.toString().slice(5));
+
+                        xhr.open("GET", url.toString().slice(5), true);
+                        xhr.send();
+                    }
+                </script>
+
+            </div>
 
             <br>
 
-            <form method="get" action="/create_page">
-                <button type="submit">Создать</button>
-            </form>
-            <form method="get" action="">
-                <button type="submit">Обновить</button>
+
+            <button onclick="create_page()">Создать</button>
+
+            <p></p>
+
+            <button onclick="refresh_page()">Обновить</button>
+
+            <script>
+
+
+                function create_page() {
+
+                    var xhr = new XMLHttpRequest()
+                    xhr.onload = function() {
+                        var serverResponse = document.getElementById("cnt")
+                        serverResponse.innerHTML = this.responseText
+                        }
+                    xhr.open("GET", "create_page", true)
+                    xhr.send()
+                    }
+
+                function refresh_page() {
+
+                    var xhr = new XMLHttpRequest()
+                    xhr.onload = function() {
+                        var serverResponse = document.getElementById("cnt")
+                        serverResponse.innerHTML = this.responseText
+                        }
+                    xhr.open("GET", "refresh_page", true)
+                    xhr.send()
+                    }
+
+                function delete_page(value, name) {
+
+                    var xhr = new XMLHttpRequest();
+                    var url = new URL('qq://delete_page/');
+                    url.searchParams.set(name, value);
+                    <!-- window.alert(url.toString().slice(5)); -->
+
+                    xhr.onload = function() {
+                        var serverResponse = document.getElementById("cnt")
+                        serverResponse.innerHTML = this.responseText
+                        }
+                    xhr.open("GET", url.toString().slice(5), true)
+                    xhr.send()
+                    }
+
+                function stop_page(value, name) {
+
+                    var xhr = new XMLHttpRequest();
+                    var url = new URL('qq://stop_page/');
+                    url.searchParams.set(name, value);
+                    <!-- window.alert(url.toString().slice(5)); -->
+
+                    xhr.onload = function() {
+                        var serverResponse = document.getElementById("cnt")
+                        serverResponse.innerHTML = this.responseText
+                        }
+                    xhr.open("GET", url.toString().slice(5), true)
+                    xhr.send()
+                    }
+
+            </script>
+            <hr><p></p>
+
+            <form>
+              <p >Данные частотомера:</p>
+              <textarea id="frequency" readonly>Загрузка...</textarea>
             </form>
 
     </body>
+
+    <script>
+        var myVar = setInterval(myTimer, 500);
+
+        function myTimer() {
+        var xhr = new XMLHttpRequest()
+        xhr.onload = function() {
+            var serverResponse = document.getElementById("frequency")
+            serverResponse.innerHTML = this.responseText
+            }
+        xhr.open("GET", "test", true)
+        xhr.send()}
+   </script>
+
+
 </html>
