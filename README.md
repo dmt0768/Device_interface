@@ -25,4 +25,6 @@ venv\Scripts\activate
 python manage.py runserver
 ```
 
+
+
 You can set a debug mode by adding "True" in the line "DEBUG = False" of "settings.py" file
