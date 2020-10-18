@@ -1,6 +1,8 @@
 # Django Server
 
 This is a Django server code of web-app to control the connected device with local IP. The Javascript code is used to make the interface interactive.
+There is Ajax example.
+
 You can test it on PythonAnywhere: http://dmt0768.pythonanywhere.com
 
 
